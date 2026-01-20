@@ -18,12 +18,13 @@ public class CreateExpenseTests
     public void AddsExpense()
     {
         var expenses = new List<Expense>();
+        
         var service = new ExpensesService(expenses);
         
-        service.Create(10, "Food");
-        
-        var created = Assert.Single(expenses);
-        Assert.Equal(10, created.Amount);
-        Assert.Equal("Food", created.CategoryName);
+        var expense = service.Create(10, "Food");
+
+        var retrieved = service.Retrive(expense.Id);
+        Assert.Equal(10, expense.Amount);
+        Assert.Equal("Food", expense.CategoryName);
     }
 }

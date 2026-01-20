@@ -1,3 +1,3 @@
 namespace Okane.Application;
 
-public record Expense(int Amount,  string CategoryName);
+public record Expense(int Id, int Amount, string CategoryName);
