@@ -14,11 +14,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapPost("/expenses", 
-    (int amount, string categoryName) =>
+    (CreateExpenseRequest request) =>
     {
         var expenses = new List<Expense>();
         var service = new ExpensesService(expenses);
-        var response = service.Create(amount, categoryName);
+        var response = service.Create(request);
         return Results.Created("/expenses", response);
     });
 

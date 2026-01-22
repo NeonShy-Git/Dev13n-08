@@ -4,10 +4,11 @@ public class ExpensesService(List<Expense> expenses)
 {
     private int _lastId = 1;
 
-    public Expense Create(int amount, string category)
+    public Expense Create(CreateExpenseRequest request)
     {
+        var (amount, categoryName) = request;
         var id = _lastId++;
-        var expense = new Expense(id, amount, category);
+        var expense = new Expense(id, amount, categoryName);
         expenses.Add(expense);
         return expense;
     }

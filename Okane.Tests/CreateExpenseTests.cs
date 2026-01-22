@@ -8,7 +8,7 @@ public class CreateExpenseTests
     public void Response()
     {
         var service = new ExpensesService([]);
-        var expense = service.Create(10, "Food");
+        var expense = service.Create(new(10, "Food"));
 
         Assert.Equal(10, expense.Amount);
         Assert.Equal("Food", expense.CategoryName);
@@ -21,7 +21,7 @@ public class CreateExpenseTests
         
         var service = new ExpensesService(expenses);
         
-        var expense = service.Create(10, "Food");
+        var expense = service.Create(new(10, "Food"));
 
         var retrieved = service.Retrieve(expense.Id);
         Assert.Equal(10, retrieved.Amount);
