@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okane.Tests", "Okane.Tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okane.Application", "Okane.Application\Okane.Application.csproj", "{02BF7943-47E8-470B-9C03-19CE805B5B0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okane.WebApi", "Okane.WebApi\Okane.WebApi.csproj", "{C954FB76-E14C-4BF7-873B-A5295AFE1CDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{02BF7943-47E8-470B-9C03-19CE805B5B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02BF7943-47E8-470B-9C03-19CE805B5B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02BF7943-47E8-470B-9C03-19CE805B5B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C954FB76-E14C-4BF7-873B-A5295AFE1CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C954FB76-E14C-4BF7-873B-A5295AFE1CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C954FB76-E14C-4BF7-873B-A5295AFE1CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C954FB76-E14C-4BF7-873B-A5295AFE1CDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
