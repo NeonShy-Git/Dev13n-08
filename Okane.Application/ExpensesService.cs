@@ -8,7 +8,7 @@ public class ExpensesService(List<Expense> expenses)
     {
         var (amount, categoryName) = request;
         var id = _lastId++;
-        var expense = new Expense(id, amount, categoryName);
+        var expense = new Expense(0, 0, categoryName);
         expenses.Add(expense);
         return expense;
     }
