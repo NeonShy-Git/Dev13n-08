@@ -32,4 +32,6 @@ app.MapGet("/expenses/{id}",
         return Results.Ok(response);
     });
 
+app.MapGet("/expenses", (ExpensesService service) => Results.Ok(service.All()));
+
 app.Run();
