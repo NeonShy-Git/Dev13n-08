@@ -31,6 +31,11 @@ public class ExpensesService(List<Expense> expenses)
 
     public bool Delete(int id)
     {
-        throw new NotImplementedException();
+        var expense = expenses.FirstOrDefault(expense => expense.Id == id);
+        
+        if (expense is null)
+            return false;
+        
+        return expenses.Remove(expense);
     }
 }

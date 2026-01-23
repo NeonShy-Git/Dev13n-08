@@ -124,4 +124,12 @@ public class ExpensesServiceTests
         
         Assert.True(response);
     }
+    
+    [Fact]
+    public void Delete_NotFound()
+    {
+        var response = _service.Delete(50);
+        
+        Assert.False(response);
+    }
 }
