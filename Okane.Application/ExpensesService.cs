@@ -26,7 +26,21 @@ public class ExpensesService(List<Expense> expenses)
 
     public Expense? Update(UpdateExpenseRequest request)
     {
-        throw new NotImplementedException();
+        var existing = expenses.FirstOrDefault(e => e.Id == request.Id);
+        
+        if (existing is null)
+            return null;
+        
+        expenses.Remove(existing);
+        
+        var newExpense = new Expense(
+            request.Id, 
+            request.Amount, 
+            request.CategoryName);
+        
+        expenses.Add(newExpense);
+        
+        return newExpense;
     }
 
     public bool Delete(int id)
