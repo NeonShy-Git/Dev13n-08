@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Okane.Application;
 
 public class ExpensesService(List<Expense> expenses)
