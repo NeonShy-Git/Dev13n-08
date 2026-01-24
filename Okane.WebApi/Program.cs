@@ -1,4 +1,5 @@
 using Okane.Application;
+using Okane.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ app.UseHttpsRedirection();
 
 app.MapPost("/expenses", 
     (ExpensesService service, CreateExpenseRequest request) => 
-        Results.Created("/expenses", service.Create(request)));
+        service.Create(request).ToHttpResult());
 
 app.MapGet("/expenses/{id}", 
     (ExpensesService service, int id) =>
@@ -36,6 +37,14 @@ app.MapPut("/expenses/{id}",
         var response = service.Update(id, request);
         
         return response == null ? Results.NotFound() : Results.Ok(response);
+    });
+
+app.MapDelete("/expenses/{id}", 
+    (ExpensesService service, int id) =>
+    {
+        var deleted = service.Delete(id);
+        
+        return deleted ? Results.NoContent() : Results.Ok();
     });
 
 app.Run();

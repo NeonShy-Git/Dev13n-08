@@ -7,13 +7,17 @@ public class ExpensesService(List<Expense> expenses)
 {
     private static int _lastId = 1;
 
-    public Expense Create(CreateExpenseRequest request)
+    public Result<Expense> Create(CreateExpenseRequest request)
     {
         var (amount, categoryName) = request;
+
+        if (amount < 1)
+            return new ErrorResult<Expense>($"{nameof(request.Amount)} must be greater than 1.");
+        
         var id = _lastId++;
         var expense = new Expense(id, amount, categoryName);
         expenses.Add(expense);
-        return expense;
+        return new OkResult<Expense>(expense);
     }
 
     public Expense? Retrieve(int expenseId)

@@ -16,8 +16,10 @@ public class ExpensesServiceTests
     [Fact]
     public void Create_Response()
     {
-        var expense = _service.Create(new(10, "Food"));
-
+        var result = _service.Create(new(10, "Food"));
+        var okResult = Assert.IsType<OkResult<Expense>>(result);
+        var expense = okResult.Value;
+        
         Assert.Equal(10, expense.Amount);
         Assert.Equal("Food", expense.CategoryName);
     }
@@ -34,7 +36,7 @@ public class ExpensesServiceTests
     public void Retrieve_Updated()
     {
         var createResponse = _service.Create(
-            new(10, "Food"));
+            new(10, "Food")).AssertOk();
         
         var updated = _service.Update(createResponse.Id, 
             new(20,  "Drinks"));
@@ -52,7 +54,7 @@ public class ExpensesServiceTests
         _expenses = new List<Expense>();
         
         
-        var expense = _service.Create(new(10, "Food"));
+        var expense = _service.Create(new(10, "Food")).AssertOk();
 
         var retrieved = _service.Retrieve(expense.Id);
         
@@ -65,7 +67,7 @@ public class ExpensesServiceTests
     public void Retrieve_Deleted()
     {
         var createResponse = _service.Create(
-            new(10, "Food"));
+            new(10, "Food")).AssertOk();
 
         var deleteResponse = _service.Delete(createResponse.Id);
         Assert.True(deleteResponse);
@@ -94,7 +96,7 @@ public class ExpensesServiceTests
     public void Update_Response()
     {
         var createResponse = _service.Create(
-            new(10, "Food"));
+            new(10, "Food")).AssertOk();
         
         var updated = _service.Update(createResponse.Id, 
             new(20,  "Drinks"));
@@ -104,7 +106,15 @@ public class ExpensesServiceTests
         Assert.Equal(20, updated.Amount);
         Assert.Equal("Drinks", updated.CategoryName);
     }
-    
+
+    [Fact]
+    public void Update_LesserThanOne()
+    {
+        var message = _service.Create(new(-1, "Food")).AssertError();
+        
+        Assert.Equal("Amount must be greater than 1.", message);
+    }
+
     [Fact]
     public void Update_NotFound()
     {
@@ -118,7 +128,7 @@ public class ExpensesServiceTests
     public void Delete_Response()
     {
         var createResponse = _service.Create(
-            new(10, "Food"));
+            new(10, "Food")).AssertOk();
 
         var response = _service.Delete(createResponse.Id);
         
