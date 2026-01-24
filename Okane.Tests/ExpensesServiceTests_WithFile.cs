@@ -2,13 +2,22 @@
 
 namespace Okane.Tests;
 
-public class ExpensesServiceTests_WithFile
+public class ExpensesServiceTests_WithFile : IDisposable
 {
     private readonly ExpensesService _service;
 
+    // Before each test
     public ExpensesServiceTests_WithFile()
     {
+        // TODO: Create file
+        
         _service = new ExpensesService(new FileExpensesRepository());
+    }
+    
+    // After each test
+    public void Dispose()
+    {
+        // TODO: Delete file
     }
 
     [Fact]
