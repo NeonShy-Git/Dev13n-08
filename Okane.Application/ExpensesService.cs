@@ -4,20 +4,23 @@ public class ExpensesService(IRepository<Expense> expenses)
 {
     public Result<ExpenseResponse> Create(CreateExpenseRequest request)
     {
-        var (amount, categoryName) = request;
-
-        if (amount < 1)
+        if (request.Amount < 1)
             return new ErrorResult<ExpenseResponse>(
                 $"{nameof(request.Amount)} must be greater than 1.");
         
         var expense = new Expense
         {
             Amount = request.Amount,
-            CategoryName = request.CategoryName
+            CategoryName = request.CategoryName,
+            Description = request.Description
         };
         expenses.Add(expense);
         
-        var response = new ExpenseResponse(expense.Id, expense.Amount, expense.CategoryName);
+        var response = new ExpenseResponse(
+            expense.Id, 
+            expense.Amount, 
+            expense.CategoryName, 
+            expense.Description);
         return new OkResult<ExpenseResponse>(response);
     }
 
@@ -29,7 +32,11 @@ public class ExpensesService(IRepository<Expense> expenses)
             return new NotFoundResult<ExpenseResponse>(
                 $"Expense with id {expenseId} was not found.");
         
-        var response = new ExpenseResponse(expense.Id, expense.Amount, expense.CategoryName);
+        var response = new ExpenseResponse(
+            expense.Id, 
+            expense.Amount, 
+            expense.CategoryName, 
+            expense.Description);
 
         return new OkResult<ExpenseResponse>(response);
     }
@@ -37,7 +44,11 @@ public class ExpensesService(IRepository<Expense> expenses)
     public Result<IEnumerable<ExpenseResponse>> All()
     {
         var response = expenses.All()
-            .Select(expense => new ExpenseResponse(expense.Id, expense.Amount, expense.CategoryName));
+            .Select(expense => new ExpenseResponse(
+                expense.Id, 
+                expense.Amount, 
+                expense.CategoryName, 
+                expense.Description));
         
         return new OkResult<IEnumerable<ExpenseResponse>>(response);
     }
@@ -54,7 +65,11 @@ public class ExpensesService(IRepository<Expense> expenses)
 
         var updated = expenses.Update(id, request);
         
-        var response = new ExpenseResponse(updated.Id, updated.Amount, updated.CategoryName);
+        var response = new ExpenseResponse(
+            updated.Id, 
+            updated.Amount, 
+            updated.CategoryName,
+            updated.Description);
         return new OkResult<ExpenseResponse>(response);
     }
 

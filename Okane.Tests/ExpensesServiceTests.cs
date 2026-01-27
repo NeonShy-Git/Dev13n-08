@@ -19,6 +19,20 @@ public class ExpensesServiceTests
         Assert.Equal(10, expense.Amount);
         Assert.Equal("Food", expense.CategoryName);
     }
+    
+    [Fact]
+    public void Create_WithDescription_Response()
+    {
+        var expense = _service.Create(new(
+            Amount: 10, 
+            CategoryName: "Food", 
+            Description: "McDonalds")
+        ).AssertOk();
+
+        Assert.Equal(10, expense.Amount);
+        Assert.Equal("Food", expense.CategoryName);
+        Assert.Equal("McDonalds", expense.Description);
+    }
 
     [Fact]
     public void Create_InvalidAmount()
@@ -30,12 +44,17 @@ public class ExpensesServiceTests
     [Fact]
     public void Retrieve_ExistingExpense()
     {
-        var created = _service.Create(new(10, "Food")).AssertOk();
+        var created = _service.Create(new(
+            Amount: 10, 
+            CategoryName: "Food", 
+            Description: "McDonalds")
+        ).AssertOk();
 
         var retrieved = _service.Retrieve(created.Id).AssertOk();
 
         Assert.Equal(10, retrieved.Amount);
         Assert.Equal("Food", retrieved.CategoryName);
+        Assert.Equal("McDonalds", retrieved.Description);
     }
 
     [Fact]
