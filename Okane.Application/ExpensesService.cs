@@ -10,12 +10,7 @@ public class ExpensesService(
             return new ErrorResult<ExpenseResponse>(
                 $"{nameof(request.Amount)} must be greater than 1.");
 
-        var expense = new Expense
-        {
-            Amount = request.Amount,
-            CategoryName = request.CategoryName,
-            Description = request.Description
-        };
+        var expense = Expense(request);
         expenses.Add(expense);
 
         var response = expenseResponseFactory.Create(expense);
@@ -69,4 +64,12 @@ public class ExpensesService(
 
         return new OkResult();
     }
+    
+    private static Expense Expense(CreateExpenseRequest request) =>
+        new()
+        {
+            Amount = request.Amount,
+            CategoryName = request.CategoryName,
+            Description = request.Description
+        };
 }
