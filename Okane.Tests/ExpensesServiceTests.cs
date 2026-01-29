@@ -68,6 +68,24 @@ public class ExpensesServiceTests
         var message = _service.Retrieve(999).AssertNotFound();
         Assert.Contains("not found", message);
     }
+    
+    [Fact]
+    public void Retrieve_Updated()
+    {
+        var created = _service.Create(new(
+            Amount: 10, 
+            CategoryName: "Food", 
+            Description: "McDonalds")
+        ).AssertOk();
+
+        var updated = _service.Update(created.Id, 
+            new UpdateExpenseRequest(10, "Drinks")).AssertOk();
+
+        var retrieved = _service.Retrieve(updated.Id).AssertOk();
+
+        Assert.Equal(10, retrieved.Amount);
+        Assert.Equal("Drinks", retrieved.CategoryName);
+    }
 
     [Fact]
     public void All_ReturnsAllExpenses()
@@ -82,9 +100,16 @@ public class ExpensesServiceTests
         Assert.Contains(all, e => e.Amount == 20 && e.CategoryName == "Drinks");
     }
 
-    [Fact(Skip = "Not implemented")]
+    [Fact]
     public void Update_CategoryNameDoesNotExist()
     {
+        var created = _service.Create(new(10, "Food"))
+            .AssertOk();
+
+        var error = _service.Update(created.Id, new UpdateExpenseRequest(10, "Unknown"))
+            .AssertError();
+        
+        Assert.Equal("Category name 'Unknown' not found.", error);
     }
     
     [Fact]

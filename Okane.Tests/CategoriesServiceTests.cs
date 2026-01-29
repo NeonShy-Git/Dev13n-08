@@ -5,10 +5,14 @@ namespace Okane.Tests;
 public class CategoriesServiceTests
 {
     private readonly CategoriesService _service;
+    private readonly ExpensesService _expensesService;
 
     public CategoriesServiceTests()
     {
-        _service = new CategoriesService(new InMemoryCategoriesRepository());
+        var categoriesRepository = new InMemoryCategoriesRepository();
+        _service = new CategoriesService(categoriesRepository);
+        _expensesService = new ExpensesService(new InMemoryExpensesRepository(), categoriesRepository,
+            new ExpenseResponseFactory());
     }
     
     [Fact]
@@ -18,6 +22,16 @@ public class CategoriesServiceTests
 
         Assert.Equal(1, category.Id);
         Assert.Equal("Food", category.Name);
+    }
+    
+    [Fact]
+    public void Create_CategoryAlreadyExists()
+    {
+        _service.Create(new CreateCategoryRequest("Food")).AssertOk();
+        
+        var error = _service.Create(new CreateCategoryRequest("Food")).AssertError();
+
+        Assert.Equal("Category already exists", error);
     }
     
     [Fact]
@@ -39,6 +53,31 @@ public class CategoriesServiceTests
     }
     
     [Fact]
+    public void Retrieve_Updated()
+    {
+        var created = _service.Create(new("Taxes")).AssertOk();
+
+        var updated = _service.Update(created.Id, 
+            new UpdateCategoryRequest("Education")).AssertOk();
+
+        var retrieved = _service.Retrieve(updated.Id).AssertOk();
+
+        Assert.Equal("Education", retrieved.Name);
+    }
+    
+    [Fact]
+    public void Retrieve_Updated_AlreadyExists()
+    {
+        _service.Create(new("Taxes")).AssertOk();
+        var created = _service.Create(new("Games")).AssertOk();
+
+        var error = _service.Update(created.Id, 
+            new UpdateCategoryRequest("Taxes")).AssertError();
+        
+        Assert.Equal("Category already exists", error);
+    }
+    
+    [Fact]
     public void All()
     {
         _service.Create(new CreateCategoryRequest("Food")).AssertOk();
@@ -49,5 +88,27 @@ public class CategoriesServiceTests
         Assert.Equal(2, all.Length);
         Assert.Contains(all, e => e.Name == "Food");
         Assert.Contains(all, e => e.Name == "Drinks");
+    }
+    
+    [Fact]
+    public void Remove()
+    {
+        var created = _service.Create(new CreateCategoryRequest("Food")).AssertOk();
+
+        _service.Remove(created.Id).AssertOk();
+
+        _service.Retrieve(created.Id).AssertNotFound();
+    }
+    
+    [Fact]
+    public void Remove_ExpensesExist()
+    {
+        var createdCategory = _service.Create(new CreateCategoryRequest("Food")).AssertOk();
+        
+        _expensesService.Create(new(30, "Food")).AssertOk();
+        
+        var error = _service.Remove(createdCategory.Id).AssertError();
+
+        Assert.Equal("Can not delete category with existing expenses", error);
     }
 }

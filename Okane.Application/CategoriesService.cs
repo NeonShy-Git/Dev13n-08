@@ -31,4 +31,14 @@ public class CategoriesService(ICategoriesRepository categories)
         
         return new OkResult<IEnumerable<CategoryResponse>>(response);
     }
+
+    public Result Remove(int createdId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Result<CategoryResponse> Update(int id, UpdateCategoryRequest reuqest)
+    {
+        throw new NotImplementedException();
+    }
 }
